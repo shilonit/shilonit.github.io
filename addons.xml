@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+	<addon id="repository.shilonit" name="shilonit repo" version="1.0" provider-name="shilonit">
+		<extension point="xbmc.addon.repository" name="shilonit repo">
+			<dir>
+				<info compressed="false">https://raw.githubusercontent.com/shilonit/shilonit.github.io/master/addons.xml</info>
+				<checksum>https://raw.githubusercontent.com/shilonit/shilonit.github.io/master/addons.xml.md5</checksum>
+				<datadir zip="true">https://raw.githubusercontent.com/shilonit/shilonit.github.io/master/zips</datadir>
+			</dir>
+		</extension>
+		<extension point="xbmc.addon.metadata">
+			<summary>shilonit Repo</summary>
+			<description>shilonit Repo</description>
+			<assets>
+				<icon>icon.jpg</icon>
+				<fanart>fanart.jpg</fanart>
+			</assets>
+			<platform>all</platform>
+		</extension>
+	</addon>
+
+	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="1.0" provider-name="shilonit">
+		<extension point="xbmc.python.pluginsource" library="main.py">
+			<provides>video</provides>
+		</extension>
+		<extension point="xbmc.python.module" library="resources/" />
+		<extension point="xbmc.python.module" library="resources/lib/" />
+		<extension point="xbmc.addon.metadata">
+			<reuselanguageinvoker>true</reuselanguageinvoker>
+			<assets>
+				<icon>icon.jpg</icon>
+				<fanart>fanart.jpg</fanart>
+			</assets>
+			<platform>all</platform>
+			<summary lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים</summary>
+			<description lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה משתמשת כמתווך לאתרים אחרים בלבד ואינה נוטלת כל אחריות</description>
+			<news>- initial release.</news>
+			<supportedcontent>
+				<content>tvshows</content>
+			</supportedcontent>
+		</extension>
+	</addon>
+</addons>
