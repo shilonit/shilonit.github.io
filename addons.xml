@@ -33,8 +33,8 @@
 			</assets>
 			<platform>all</platform>
 			<summary lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים</summary>
-			<description lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה משתמשת כמתווך לאתרים אחרים בלבד ואינה נוטלת כל אחריות</description>
-			<news>- initial release.</news>
+			<description lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה מתווכת בינך לאתרים אחרים, האחריות היא עליך</description>
+			<news>- Fix 403 which sometimes occurs.</news>
 			<supportedcontent>
 				<content>tvshows</content>
 			</supportedcontent>
