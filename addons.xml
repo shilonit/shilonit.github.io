@@ -19,7 +19,7 @@
 		</extension>
 	</addon>
 
-	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="1.3" provider-name="shilonit">
+	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="1.4" provider-name="shilonit">
 		<requires>
 			<import addon="script.module.requests"/>
 		</requires>
@@ -38,12 +38,7 @@
 			<platform>all</platform>
 			<summary lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים</summary>
 			<description lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה משתמשת כמתווך לאתרים אחרים בלבד ואינה נוטלת כל אחריות</description>
-			<news>
-- Adding Settings.
-- Adding an EPG.
-- Changing channel structure.
-- More fix
-			</news>
+			<news>Fix user agent</news>
 			<supportedcontent>
 				<content>tvshows</content>
 			</supportedcontent>
