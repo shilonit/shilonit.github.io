@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="1.5.1" provider-name="shilonit">
+	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="1.5.2" provider-name="shilonit">
 		<requires>
 			<import addon="script.module.requests"/>
 		</requires>
@@ -18,7 +18,7 @@
 			<platform>all</platform>
 			<summary lang="en">צפייה בערוצי טלוויזיה ישראליים</summary>
 			<description lang="en">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה משתמשת כמתווך לאתרים אחרים בלבד ואינה נוטלת כל אחריות</description>
-			<news>Minor fix</news>
+			<news>Adding an alternative sport 5</news>
 			<supportedcontent>
 				<content>tvshows</content>
 			</supportedcontent>
