@@ -19,9 +19,10 @@
 		</extension>
 	</addon>
 
-	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="1.5.7" provider-name="shilonit">
+	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="1.5.8" provider-name="shilonit">
 		<requires>
 			<import addon="script.module.requests"/>
+			<import addon="script.module.beautifulsoup4"/>
 		</requires>
 		<extension point="xbmc.python.pluginsource" library="main.py">
 			<provides>video</provides>
