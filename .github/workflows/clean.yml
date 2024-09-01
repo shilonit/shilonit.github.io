@@ -67,4 +67,4 @@ jobs:
         git config user.email "github-actions@github.com"
         git add addons.xml addons.xml.md5
         git commit -m "Update version" || echo "No changes to commit"
-        git push origin main
+        git push origin master
