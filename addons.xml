@@ -28,8 +28,8 @@
 			<provides>video</provides>
 		</extension>
 		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
-		<extension point="xbmc.python.module" library="resources/" />
-		<extension point="xbmc.python.module" library="resources/lib/" />
+		<extension point="xbmc.python.module" library="resources/"/>
+		<extension point="xbmc.python.module" library="resources/lib/"/>
 		<extension point="xbmc.addon.metadata">
 			<reuselanguageinvoker>true</reuselanguageinvoker>
 			<assets>
@@ -43,6 +43,32 @@
 			<description lang="en_gb">Watching Israeli TV and sports channels, the extension uses as an intermediary for other websites only and does not assume any responsibility. After changing the interface language, A restart is required so that they are created in the new language selected.</description>
 			<disclaimer lang="he_IL">ההרחבה משמשת כמתווכת בלבד והיא איננה יציבה! המפתחים אינם אחראים על כשלון בניגון, זמנים שגויים במדריך השידורים, שעות מבוזבזות או כל אחריות ותופעה לא רצויה אחרת.</disclaimer>
 			<disclaimer lang="en_gb">The extension is used as an intermediary only and is not stable! The developers are not responsible for playback failure, incorrect times in the broadcast guide, wasted hours or any other unwanted warranty and phenomenon.</disclaimer>
+			<supportedcontent>
+				<content>tvshows</content>
+			</supportedcontent>
+		</extension>
+	</addon>
+	<addon id="plugin.video.idanplus" name="עידן+ פלוס" version="3.6.2" provider-name="Fishenzon">
+		<requires>
+			<import addon="script.module.requests"/>
+			<import addon="script.module.xmltodict"/>
+		</requires>
+		<extension point="xbmc.python.pluginsource" library="default.py">
+			<provides>video</provides>
+		</extension>
+		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
+		<extension library="resources/" point="xbmc.python.module"/>
+		<extension library="resources/lib/" point="xbmc.python.module"/>
+		<extension point="xbmc.addon.metadata">
+			<reuselanguageinvoker>true</reuselanguageinvoker>
+			<assets>
+				<icon>icon.png</icon>
+				<fanart>fanart.jpg</fanart>
+			</assets>
+			<platform>all</platform>
+			<summary lang="en">צפיה בערוצי עידן פלוס ובתכניות מהאתרים הרשמיים.</summary>
+			<description lang="en">צפיה בערוצי עידן פלוס ובתכניות מהאתרים הרשמיים.[CR]אפשרויות שונות בהגדרות ההרחבה ובקליק ימני על פריט ברשימה.</description>
+			<disclaimer lang="en">גירסה עברה שינוי יחיד שהיא מקבלת את המידע דרך גיטאהב ולא דרך אתרים חיצוניים.</disclaimer>
 			<supportedcontent>
 				<content>tvshows</content>
 			</supportedcontent>
