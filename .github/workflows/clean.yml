@@ -3,7 +3,7 @@ name: Remove Old Files
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - zips/**
       - addons.xml
