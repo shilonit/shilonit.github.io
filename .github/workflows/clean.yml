@@ -1,0 +1,69 @@
+name: Remove Old Files
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - zips/**
+
+jobs:
+  update-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Find and Remove Old Files
+      run: |
+        set -e
+        # Define the directories and file patterns
+        directories=("zips/plugin.video.tvisrael" "zips/plugin.video.idanplus")
+
+        for dir in "${directories[@]}"; do
+          # Find the latest version file
+          latest_file=$(ls -1v "$dir"/*.zip | tail -n 1)
+          latest_version=$(echo "$latest_file" | grep -oP '\d+\.\d+\.\d+')
+
+          echo "Latest version: $latest_version"
+
+          # Iterate over files in the directory
+          for file in "$dir"/*.zip; do
+            # Extract the version from the filename
+            version=$(echo "$file" | grep -oP '\d+\.\d+\.\d+')
+
+            # Remove the file if it's not the latest version
+            if [ "$version" != "$latest_version" ]; then
+              echo "Removing old file: $file"
+              rm "$file"
+            fi
+          done
+        done
+
+        # Configure git for commits
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add .
+        git commit -m "Remove old versions" || echo "No changes to commit"
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install lxml
+
+    - name: Update XML Files and MD5
+      run: |
+        python .github/scripts/update_addons.py
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add addons.xml addons.xml.md5
+        git commit -m "Update version" || echo "No changes to commit"
+        git push origin main
