@@ -53,7 +53,7 @@
 			<import addon="script.module.requests"/>
 			<import addon="script.module.xmltodict"/>
 		</requires>
-		<extension point="xbmc.python.pluginsource" library="default.py">
+		<extension point="xbmc.python.pluginsource" library="default.py ">
 			<provides>video</provides>
 		</extension>
 		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
