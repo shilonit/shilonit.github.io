@@ -1,4 +1,4 @@
-name: Remove Old Files
+name: Remove Old Files and Update
 
 on:
   push:
@@ -23,30 +23,32 @@ jobs:
         directories=("zips/plugin.video.tvisrael" "zips/plugin.video.idanplus")
 
         for dir in "${directories[@]}"; do
-          # Find the latest version file
-          latest_file=$(ls -1v "$dir"/*.zip | tail -n 1)
-          latest_version=$(echo "$latest_file" | grep -oP '\d+\.\d+\.\d+')
+          if [ -d "$dir" ]; then
+            # Find the latest version file
+            latest_file=$(find "$dir" -maxdepth 1 -name '*.zip' | sort -V | tail -n 1)
+            latest_version=$(basename "$latest_file" | awk -F'-' '{print $NF}' | sed 's/.zip$//')
 
-          echo "Latest version: $latest_version"
+            echo "Latest version: $latest_version"
 
-          # Iterate over files in the directory
-          for file in "$dir"/*.zip; do
-            # Extract the version from the filename
-            version=$(echo "$file" | grep -oP '\d+\.\d+\.\d+')
+            # Iterate over files in the directory
+            for file in "$dir"/*.zip; do
+              # Extract the version from the filename
+              version=$(basename "$file" | awk -F'-' '{print $NF}' | sed 's/.zip$//')
 
-            # Remove the file if it's not the latest version
-            if [ "$version" != "$latest_version" ]; then
-              echo "Removing old file: $file"
-              rm "$file"
-            fi
-          done
+              # Remove the file if it's not the latest version
+              if [ "$version" != "$latest_version" ]; then
+                echo "Removing old file: $file"
+                rm "$file" || { echo "Error removing $file"; exit 1; }
+              fi
+            done
+          else
+            echo "Directory $dir does not exist"
+          fi
         done
 
-        # Configure git for commits
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
-        git add .
-        git commit -m "Remove old versions" || echo "No changes to commit"
+        # Stage deletions and other changes
+        git add . || { echo "Error staging files"; exit 1; }
+        git status --porcelain || { echo "Error checking git status"; exit 1; }
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -59,12 +61,19 @@ jobs:
 
     - name: Update XML Files and MD5
       run: |
-        python .github/scripts/update_addons.py
+        python .github/scripts/update_addons.py || { echo "Error running update_addons.py"; exit 1; }
+        git add addons.xml addons.xml.md5 || { echo "Error staging addons.xml or addons.xml.md5"; exit 1; }
+        git status --porcelain || { echo "Error checking git status after updating addons.xml"; exit 1; }
 
     - name: Commit and push changes
       run: |
         git config user.name "github-actions"
         git config user.email "github-actions@github.com"
-        git add addons.xml addons.xml.md5
-        git commit -m "Update version" || echo "No changes to commit"
-        git push origin master
+
+        # Commit if there are changes
+        if ! git diff --cached --quiet; then
+          git commit -m "Remove old versions and update XML" || { echo "Error committing changes"; exit 1; }
+          git push origin master || { echo "Error pushing changes"; exit 1; }
+        else
+          echo "No changes to commit"
+        fi
