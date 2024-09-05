@@ -19,7 +19,7 @@ def compute_md5(file_path):
 # Load and update addons.xml
 def update_addons_xml(zip_file, version):
     # Extract plugin ID from the zip file name
-    match = re.match(r'plugin\.video\.(\w+)-(\d+\.\d+\.\d+)(-mod)?\.zip', zip_file)
+    match = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', zip_file)
     if not match:
         print(f"File name {zip_file} does not match expected format.")
         return
@@ -50,7 +50,7 @@ def main():
         for file_name in files:
             if file_name.endswith('.zip'):
                 # Extract plugin and version from the file name
-                match = re.match(r'plugin\.video\.(\w+)-(\d+\.\d+\.\d+)(-mod)?\.zip', file_name)
+                match = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', file_name)
                 if match:
                     version = match.group(2)
                     # Update addons.xml
