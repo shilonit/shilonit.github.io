@@ -18,13 +18,17 @@ def compute_md5(file_path):
 
 # Load and update addons.xml
 def update_addons_xml(zip_file, version):
-    # Extract plugin ID from the zip file name
-    match = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', zip_file)
-    if not match:
+    # Check if it's a plugin video or a skin
+    match_plugin = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', zip_file)
+    match_skin = re.match(r'skin\.estuary\.rtl-(\d+(\.\d+){0,2})\.zip', zip_file)
+
+    if match_plugin:
+        plugin_id = f'plugin.video.{match_plugin.group(1)}'
+    elif match_skin:
+        plugin_id = 'skin.estuary.rtl'
+    else:
         print(f"File name {zip_file} does not match expected format.")
         return
-
-    plugin_id = f'plugin.video.{match.group(1)}'
 
     # Parse XML
     tree = etree.parse(addons_xml_path)
@@ -40,9 +44,14 @@ def update_addons_xml(zip_file, version):
             updated = True
             print(f"Updated {plugin_id} to version {version}")
 
-    if updated:
-        tree.write(addons_xml_path, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-        print("addons.xml updated.")
+    if not updated:
+        # If addon is not found, add it as a new entry
+        new_addon = etree.Element('addon', id=plugin_id, version=version, provider-name='shilonit')
+        root.append(new_addon)
+        print(f"Added new addon {plugin_id} with version {version}")
+
+    tree.write(addons_xml_path, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+    print(f"addons.xml updated.")
 
 # Main function
 def main():
@@ -50,10 +59,14 @@ def main():
         for file_name in files:
             if file_name.endswith('.zip'):
                 # Extract plugin and version from the file name
-                match = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', file_name)
-                if match:
-                    version = match.group(2)
-                    # Update addons.xml
+                match_plugin = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', file_name)
+                match_skin = re.match(r'skin\.estuary\.rtl-(\d+(\.\d+){0,2})\.zip', file_name)
+
+                if match_plugin:
+                    version = match_plugin.group(2)
+                    update_addons_xml(file_name, version)
+                elif match_skin:
+                    version = match_skin.group(1)  # Version for skin.estuary.rtl
                     update_addons_xml(file_name, version)
 
     # Update MD5 checksum
