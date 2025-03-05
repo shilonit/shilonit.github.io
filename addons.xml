@@ -19,6 +19,36 @@
 		</extension>
 	</addon>
 
+	<addon id="skin.estuary.rtl" version="0.0.1" name="Estuary RTL" provider-name="Shilonit">
+		<requires>
+			<import addon="xbmc.gui" version="5.18.0"/>
+		</requires>
+		<extension point="xbmc.gui.skin" debugging="false">
+			<res width="1920" height="1440" aspect="4:3" default="false" folder="xml"/>
+			<res width="1920" height="1280" aspect="3:2" default="false" folder="xml"/>
+			<res width="1920" height="1200" aspect="16:10" default="false" folder="xml"/>
+			<res width="2040" height="1080" aspect="17:9" default="false" folder="xml"/>
+			<res width="1920" height="1080" aspect="16:9" default="true" folder="xml"/>
+			<res width="2560" height="1080" aspect="21:9" default="false" folder="xml"/>
+			<res width="2338" height="1080" aspect="19.5:9" default="false" folder="xml"/>
+			<res width="2160" height="1080" aspect="18:9" default="false" folder="xml"/>
+		</extension>
+		<extension point="xbmc.addon.metadata">
+			<platform>all</platform>
+			<license>CC BY-SA 4.0, GNU GENERAL PUBLIC LICENSE Version 2.0</license>
+			<assets>
+				<icon>resources/icon.png</icon>
+				<fanart>resources/fanart.jpg</fanart>
+			</assets>
+			<summary lang="en_GB">Estuary skin by phil65 mod by shilonit to support RTL. (Kodi's default skin)</summary>
+			<summary lang="he_IL">מעטפת Estuary של phil65 שונה על ידי שילונית בכדי לתמוך בשפות ימין לשמאל(ברירת המחדל של קודי)</summary>
+			<description lang="en_GB">Estuary is the default skin for Kodi 17.0 and above. It attempts to be easy for first time Kodi users to understand and use.</description>
+			<description lang="he_IL">Estuary היא מעטפת ברירת המחדל של קודי מגרסאות 17.0 ומעלה. מטרת מעטפת זו היא להיות פשוטה לשימוש ולהכרה ראשונית על ידי משתמשים חדשים.</description>
+			<disclaimer lang="en_GB">Estuary is the default skin for Kodi, removing it may cause issues</disclaimer>
+			<disclaimer lang="he_IL">Estuary היא מעטפת ברירת המחדל של קודי, הסרתה עלולה לגרום לתקלות</disclaimer>
+		</extension>
+	</addon>
+
 	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="2.1.6" provider-name="shilonit">
 		<requires>
 			<import addon="script.module.requests"/>
@@ -48,6 +78,7 @@
 			</supportedcontent>
 		</extension>
 	</addon>
+
 	<addon id="plugin.video.idanplus" name="עידן+ פלוס" version="3.7.6" provider-name="Fishenzon">
 		<requires>
 			<import addon="script.module.requests"/>
@@ -75,36 +106,6 @@
 			<supportedcontent>
 				<content>tvshows</content>
 			</supportedcontent>
-		</extension>
-	</addon>
-	<addon id="skin.estuary.rtl" version="0.0.1" name="Estuary RTL" provider-name="Shilonit">
-		<requires>
-			<import addon="xbmc.gui" version="5.18.0"/>
-		</requires>
-		<extension point="xbmc.gui.skin" debugging="false">
-			<res width="1920" height="1440" aspect="4:3" default="false" folder="xml"/>
-			<res width="1920" height="1280" aspect="3:2" default="false" folder="xml"/>
-			<res width="1920" height="1200" aspect="16:10" default="false" folder="xml"/>
-			<res width="2040" height="1080" aspect="17:9" default="false" folder="xml"/>
-			<res width="1920" height="1080" aspect="16:9" default="true" folder="xml"/>
-			<res width="2560" height="1080" aspect="21:9" default="false" folder="xml"/>
-			<res width="2338" height="1080" aspect="19.5:9" default="false" folder="xml"/>
-			<res width="2160" height="1080" aspect="18:9" default="false" folder="xml"/>
-		</extension>
-		<extension point="xbmc.addon.metadata">
-			<platform>all</platform>
-			<license>CC BY-SA 4.0, GNU GENERAL PUBLIC LICENSE Version 2.0</license>
-			<source>https://github.com/shilonit/skin.estuary.rtl/</source>
-			<assets>
-				<icon>resources/icon.png</icon>
-				<fanart>resources/fanart.jpg</fanart>
-			</assets>
-			<summary lang="en_GB">Estuary skin by phil65 mod by shilonit to support RTL. (Kodi's default skin)</summary>
-			<summary lang="he_IL">מעטפת Estuary של phil65 שונה על ידי שילונית בכדי לתמוך בשפות ימין לשמאל(ברירת המחדל של קודי)</summary>
-			<description lang="en_GB">Estuary is the default skin for Kodi 17.0 and above. It attempts to be easy for first time Kodi users to understand and use.</description>
-			<description lang="he_IL">Estuary היא מעטפת ברירת המחדל של קודי מגרסאות 17.0 ומעלה. מטרת מעטפת זו היא להיות פשוטה לשימוש ולהכרה ראשונית על ידי משתמשים חדשים.</description>
-			<disclaimer lang="en_GB">Estuary is the default skin for Kodi, removing it may cause issues</disclaimer>
-			<disclaimer lang="he_IL">Estuary היא מעטפת ברירת המחדל של קודי, הסרתה עלולה לגרום לתקלות</disclaimer>
 		</extension>
 	</addon>
 </addons>
