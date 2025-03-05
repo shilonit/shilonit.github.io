@@ -77,7 +77,7 @@
 			</supportedcontent>
 		</extension>
 	</addon>
-	<addon id="skin.estuary.rtl" version="0.0.1" name="Estuary" provider-name="Shilonit">
+	<addon id="skin.estuary.rtl" version="0.0.1" name="Estuary RTL" provider-name="Shilonit">
 		<requires>
 			<import addon="xbmc.gui" version="5.18.0"/>
 		</requires>
