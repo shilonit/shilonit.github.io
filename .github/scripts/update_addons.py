@@ -44,14 +44,9 @@ def update_addons_xml(zip_file, version):
             updated = True
             print(f"Updated {plugin_id} to version {version}")
 
-    if not updated:
-        # If addon is not found, add it as a new entry
-        new_addon = etree.Element('addon', id=plugin_id, version=version, provider-name='shilonit')
-        root.append(new_addon)
-        print(f"Added new addon {plugin_id} with version {version}")
-
-    tree.write(addons_xml_path, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-    print(f"addons.xml updated.")
+    if updated:
+        tree.write(addons_xml_path, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+        print("addons.xml updated.")
 
 # Main function
 def main():
