@@ -20,7 +20,7 @@ jobs:
       run: |
         set -e
         # Define the directories and file patterns
-        directories=("zips/plugin.video.tvisrael" "zips/plugin.video.idanplus")
+        directories=("zips/plugin.video.tvisrael" "zips/plugin.video.idanplus" "zips/skin.estuary.rtl")
 
         for dir in "${directories[@]}"; do
           if [ -d "$dir" ]; then
