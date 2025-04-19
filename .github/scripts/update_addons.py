@@ -1,14 +1,12 @@
-import os
-import re
-import hashlib
+import os, re, hashlib
 from lxml import etree
 
-# Paths
+## Paths
 addons_xml_path = 'addons.xml'
 addons_xml_md5_path = 'addons.xml.md5'
 zips_path = 'zips/'
 
-# Helper function to compute md5 checksum
+## Helper function to compute md5 checksum
 def compute_md5(file_path):
     with open(file_path, 'rb') as f:
         file_hash = hashlib.md5()
@@ -16,25 +14,21 @@ def compute_md5(file_path):
             file_hash.update(chunk)
     return file_hash.hexdigest()
 
-# Load and update addons.xml
+## Load and update addons.xml
 def update_addons_xml(zip_file, version):
-    # Check if it's a plugin video or a skin
     match_plugin = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', zip_file)
-    match_skin = re.match(r'skin\.estuary\.rtl-(\d+(\.\d+){0,2})\.zip', zip_file)
 
     if match_plugin:
         plugin_id = f'plugin.video.{match_plugin.group(1)}'
-    elif match_skin:
-        plugin_id = 'skin.estuary.rtl'
     else:
         print(f"File name {zip_file} does not match expected format.")
         return
 
-    # Parse XML
+    ## Parse XML
     tree = etree.parse(addons_xml_path)
     root = tree.getroot()
 
-    # Find and update the relevant addon entry
+    ## Find and update the relevant addon entry
     updated = False
     for addon in root.findall('addon'):
         if addon.get('id') == plugin_id:
@@ -48,23 +42,17 @@ def update_addons_xml(zip_file, version):
         tree.write(addons_xml_path, pretty_print=True, xml_declaration=True, encoding='UTF-8')
         print("addons.xml updated.")
 
-# Main function
 def main():
     for root, dirs, files in os.walk(zips_path):
         for file_name in files:
             if file_name.endswith('.zip'):
-                # Extract plugin and version from the file name
                 match_plugin = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', file_name)
-                match_skin = re.match(r'skin\.estuary\.rtl-(\d+(\.\d+){0,2})\.zip', file_name)
 
                 if match_plugin:
                     version = match_plugin.group(2)
                     update_addons_xml(file_name, version)
-                elif match_skin:
-                    version = match_skin.group(1)  # Version for skin.estuary.rtl
-                    update_addons_xml(file_name, version)
 
-    # Update MD5 checksum
+    ## Update MD5 checksum
     new_md5 = compute_md5(addons_xml_path)
     with open(addons_xml_md5_path, 'w') as f:
         f.write(new_md5)
