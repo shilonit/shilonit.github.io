@@ -23,17 +23,20 @@ jobs:
         excluded_dir="zips/repository.shilonit"
         directories=($(find zips -mindepth 1 -maxdepth 1 -type d ! -path "$excluded_dir"))
 
-        ## Print directories for debugging
-        echo "Processing directories:"
-        printf "%s\n" "${directories[@]}"
-
         for dir in "${directories[@]}"; do
           if [ -d "$dir" ]; then
             ## Find the latest version file
             latest_file=$(find "$dir" -maxdepth 1 -name '*.zip' | sort -V | tail -n 1)
+
+            ## If no file, skip
+            if [ -z "$latest_file" ]; then
+              echo "No zip files found in $dir, skipping..."
+              continue
+            fi
+
             latest_version=$(basename "$latest_file" | awk -F'-' '{print $NF}' | sed 's/.zip$//')
 
-            echo "Latest version: $latest_version"
+            echo "Processing: $dir (Latest file: $(basename "$latest_file"), Version: $latest_version)"
 
             ## Iterate over files in the directory
             for file in "$dir"/*.zip; do
