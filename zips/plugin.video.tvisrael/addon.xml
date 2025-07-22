@@ -4,7 +4,7 @@
 			<import addon="script.module.requests"/>
 			<import addon="script.module.beautifulsoup4"/>
 		</requires>
-		<extension point="xbmc.python.pluginsource" library="main.py">
+		<extension point="xbmc.python.pluginsource" library="resources/lib/main.py">
 			<provides>video</provides>
 		</extension>
 		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
@@ -19,8 +19,8 @@
 			<platform>all</platform>
 			<summary lang="he_IL">צפייה בערוצי טלוויזיה ישראליים</summary>
 			<summary lang="en_gb">Watching Israeli TV channels</summary>
-			<description lang="he_IL">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה מתווכת לאתרי סטרימינג, ייתכנו תקלות מעת לעת. לאחר שינוי שפת ממשק יש לבצע הפעלה מחדש בכדי שיווצרו בשפה החדשה שנבחרה.</description>
-			<description lang="en_gb">Watching Israeli TV and sports channels, the extension uses as an intermediary for other websites only and does not assume any responsibility. After changing the interface language, A restart is required so that they are created in the new language selected.</description>
+			<description lang="he_IL">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה מתווכת לאתרי סטרימינג, ייתכנו תקלות מעת לעת. לאחר שינוי שפת ממשק יש ללחוץ על "הגדרה ראשונית או תיקון שגיאות".</description>
+			<description lang="en_gb">Watching Israeli sports channels, the extension links to streaming sites, and occasional issues may occur. After changing the interface language, click "Initial Setup or Fix Errors".</description>
 			<disclaimer lang="he_IL">ההרחבה משמשת כמתווכת בלבד והיא איננה יציבה! המפתחים אינם אחראים על כשלון בניגון, זמנים שגויים במדריך השידורים, שעות מבוזבזות או כל אחריות ותופעה לא רצויה אחרת.</disclaimer>
 			<disclaimer lang="en_gb">The extension is used as an intermediary only and is not stable! The developers are not responsible for playback failure, incorrect times in the broadcast guide, wasted hours or any other unwanted warranty and phenomenon.</disclaimer>
 			<supportedcontent>
