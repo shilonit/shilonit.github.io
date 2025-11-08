@@ -1,62 +1,150 @@
-import os, re, hashlib
+import os
+import re
+import hashlib
+import zipfile
 from lxml import etree
+from difflib import unified_diff
 
-## Paths
-addons_xml_path = 'addons.xml'
-addons_xml_md5_path = 'addons.xml.md5'
-zips_path = 'zips/'
+# Paths
+ADDONS_XML = 'addons.xml'
+ADDONS_MD5 = 'addons.xml.md5'
+ZIPS_DIR = 'zips/'
 
-## Helper function to compute md5 checksum
+# Compute MD5 checksum
 def compute_md5(file_path):
+    hash_md5 = hashlib.md5()
     with open(file_path, 'rb') as f:
-        file_hash = hashlib.md5()
-        while chunk := f.read(8192):
-            file_hash.update(chunk)
-    return file_hash.hexdigest()
+        for chunk in iter(lambda: f.read(8192), b''):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
-## Load and update addons.xml
-def update_addons_xml(zip_file, version):
-    match_plugin = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', zip_file)
+# Extract addon.xml from zip
+def extract_addon_xml(zip_path):
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        for name in zip_ref.namelist():
+            if name.endswith('addon.xml'):
+                with zip_ref.open(name) as addon_file:
+                    return addon_file.read()
+    return None
 
-    if match_plugin:
-        plugin_id = f'plugin.video.{match_plugin.group(1)}'
+# Compare two XML strings and print differences
+def compare_xml(old_xml, new_xml, plugin_id):
+    old_lines = old_xml.decode('utf-8').splitlines()
+    new_lines = new_xml.decode('utf-8').splitlines()
+    diff = list(unified_diff(old_lines, new_lines, fromfile='old', tofile='new', lineterm=''))
+    if diff:
+        print(f"\n🔄 Differences for {plugin_id}:")
+        for line in diff:
+            print(line)
     else:
-        print(f"File name {zip_file} does not match expected format.")
+        print(f"\n✅ No differences for {plugin_id}")
+
+# Merge metadata without overwriting en_GB with en
+def merge_metadata(existing_ext, new_ext):
+    special_tags = ['summary', 'description', 'disclaimer']
+    for tag in special_tags:
+        existing_tags = {el.get('lang'): el for el in existing_ext.findall(tag)}
+        for new_el in new_ext.findall(tag):
+            lang = new_el.get('lang')
+            if lang == "en" and "en_GB" in existing_tags:
+                continue
+            if lang in existing_tags:
+                existing_tags[lang].text = new_el.text
+            else:
+                existing_ext.append(new_el)
+
+    for new_el in new_ext:
+        if new_el.tag not in special_tags:
+            existing_el = existing_ext.find(new_el.tag)
+            if existing_el is not None:
+                existing_ext.remove(existing_el)
+            existing_ext.append(new_el)
+
+# Update local addon.xml
+def update_local_addon_xml(existing_path, addon_xml_data):
+    new_tree = etree.fromstring(addon_xml_data)
+
+    if os.path.exists(existing_path):
+        try:
+            tree = etree.parse(existing_path)
+            root = tree.getroot()
+            root.attrib.update(new_tree.attrib)
+            existing_metadata = root.find("extension[@point='xbmc.addon.metadata']")
+            new_metadata = new_tree.find("extension[@point='xbmc.addon.metadata']")
+            if existing_metadata is not None and new_metadata is not None:
+                merge_metadata(existing_metadata, new_metadata)
+
+            tree.write(existing_path, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+            print(f"✅ Updated local addon.xml at {existing_path}")
+        except Exception as e:
+            print(f"❌ Failed to update local addon.xml at {existing_path}: {e}")
+    else:
+        with open(existing_path, 'wb') as f:
+            f.write(addon_xml_data)
+        print(f"📄 Saved new addon.xml at {existing_path}")
+
+# Update addons.xml with new addon.xml content
+def update_addons_xml_from_addon(addon_xml_data):
+    addon_tree = etree.fromstring(addon_xml_data)
+    plugin_id = addon_tree.get('id')
+    version = addon_tree.get('version')
+    try:
+        tree = etree.parse(ADDONS_XML)
+        root = tree.getroot()
+    except Exception as e:
+        print(f"Error parsing {ADDONS_XML}: {e}")
         return
 
-    ## Parse XML
-    tree = etree.parse(addons_xml_path)
-    root = tree.getroot()
-
-    ## Find and update the relevant addon entry
-    updated = False
     for addon in root.findall('addon'):
         if addon.get('id') == plugin_id:
-            old_version = addon.get('version')
-            print(f"Old version for {plugin_id}: {old_version}")
-            addon.set('version', version)
-            updated = True
-            print(f"Updated {plugin_id} to version {version}")
+            print(f"\n📦 Updating {plugin_id} in {ADDONS_XML}")
+            addon.attrib.update(addon_tree.attrib)
+            existing_metadata = addon.find("extension[@point='xbmc.addon.metadata']")
+            new_metadata = addon_tree.find("extension[@point='xbmc.addon.metadata']")
+            if existing_metadata is not None and new_metadata is not None:
+                merge_metadata(existing_metadata, new_metadata)
+            tree.write(ADDONS_XML, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+            print(f"✅ Updated {plugin_id} to version {version}")
+            return
 
-    if updated:
-        tree.write(addons_xml_path, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-        print("addons.xml updated.")
+    print(f"⚠️ {plugin_id} not found in {ADDONS_XML}")
 
+# Main logic
 def main():
-    for root, dirs, files in os.walk(zips_path):
+    for root_dir, _, files in os.walk(ZIPS_DIR):
         for file_name in files:
             if file_name.endswith('.zip'):
-                match_plugin = re.match(r'plugin\.video\.(\w+)-(\d+(\.\d+){0,2})\.zip', file_name)
+                zip_path = os.path.join(root_dir, file_name)
+                addon_xml_data = extract_addon_xml(zip_path)
+                if not addon_xml_data:
+                    print(f"❌ addon.xml not found in {file_name}")
+                    continue
 
-                if match_plugin:
-                    version = match_plugin.group(2)
-                    update_addons_xml(file_name, version)
+                try:
+                    addon_tree = etree.fromstring(addon_xml_data)
+                    plugin_id = addon_tree.get('id')
+                except Exception as e:
+                    print(f"❌ Failed to parse addon.xml in {file_name}: {e}")
+                    continue
 
-    ## Update MD5 checksum
-    new_md5 = compute_md5(addons_xml_path)
-    with open(addons_xml_md5_path, 'w') as f:
-        f.write(new_md5)
-    print(f"Updated {addons_xml_md5_path} with new checksum.")
+                # Compare with existing addon.xml (if exists)
+                existing_path = os.path.join(root_dir, 'addon.xml')
+                if os.path.exists(existing_path):
+                    with open(existing_path, 'rb') as f:
+                        old_data = f.read()
+                    compare_xml(old_data, addon_xml_data, plugin_id)
+                else:
+                    print(f"📁 No existing addon.xml found for {plugin_id}")
+                update_local_addon_xml(existing_path, addon_xml_data)
+
+                # Update main addons.xml
+                update_addons_xml_from_addon(addon_xml_data)
+
+    # Update MD5
+    md5 = compute_md5(ADDONS_XML)
+    with open(ADDONS_MD5, 'w') as f:
+        f.write(md5)
+    print(f"\n🔐 MD5 checksum updated in {ADDONS_MD5}")
 
 if __name__ == "__main__":
     main()
