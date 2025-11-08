@@ -69,7 +69,7 @@ jobs:
     - name: Update XML Files and MD5
       run: |
         python .github/scripts/update_addons.py || { echo "Error running update_addons.py"; exit 1; }
-        git add addons.xml addons.xml.md5 || { echo "Error staging addons.xml or addons.xml.md5"; exit 1; }
+        git add addons.xml addons.xml.md5 zips/*/addon.xml || { echo "Error staging XML files"; exit 1; }
         git status --porcelain || { echo "Error checking git status after updating addons.xml"; exit 1; }
 
     - name: Commit and push changes
