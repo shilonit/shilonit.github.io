@@ -50,6 +50,7 @@
 
 	<addon id="plugin.video.idanplus" name="עידן+ פלוס" version="3.8.8" provider-name="Fishenzon">
 		<requires>
+			<import addon="script.module.infotagger"/>
 			<import addon="script.module.requests"/>
 			<import addon="script.module.xmltodict"/>
 		</requires>
