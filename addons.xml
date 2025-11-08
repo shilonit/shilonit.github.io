@@ -12,11 +12,11 @@
 			<summary>shilonit Repo</summary>
 			<description>shilonit Repo</description>
 			<assets>
-				<icon>icon.jpg</icon>
-				<fanart>fanart.jpg</fanart>
-			</assets>
-			<platform>all</platform>
-		</extension>
+			<icon>icon.jpg</icon>
+			<fanart>fanart.jpg</fanart>
+		</assets>
+		<platform>all</platform>
+	</extension>
 	</addon>
 	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="3.0.1" provider-name="shilonit">
 		<requires>
@@ -30,18 +30,18 @@
 		<extension point="xbmc.python.module" library="resources/"/>
 		<extension point="xbmc.python.module" library="resources/lib/"/>
 		<extension point="xbmc.addon.metadata">
+			<summary lang="he_IL">צפייה בערוצי ספורט ישראליים</summary>
+			<summary lang="en_gb">Watching Israeli sport channels</summary>
+			<description lang="he_IL">צפייה בערוצי ספורט ישראליים, ההרחבה מתווכת לאתרי סטרימינג ואינה נוטלת כל אחריות, ייתכנו תקלות מעת לעת. לאחר שינוי שפת ממשק יש לבצע "הגדרה ראשונית" בכדי שיווצרו בשפה החדשה שנבחרה.</description>
+			<description lang="en_gb">When watching Israeli sports channels, the plugin acts as an intermediary for other websites only and does not assume any responsibility. After changing the interface language, an "initial setting" is required so that files are created in the new selected language.</description>
+			<disclaimer lang="he_IL">ההרחבה משמשת כמתווכת בלבד והיא איננה יציבה! המפתחים אינם אחראים על כשלון בניגון, זמנים שגויים במדריך השידורים, שעות מבוזבזות או כל אחריות ותופעה לא רצויה אחרת.</disclaimer>
+			<disclaimer lang="en_gb">The extension is used as an intermediary only and is not stable! The developers are not responsible for playback failure, incorrect times in the broadcast guide, wasted hours or any other unwanted warranty and phenomenon.</disclaimer>
 			<reuselanguageinvoker>true</reuselanguageinvoker>
 			<assets>
 				<icon>icon.jpg</icon>
 				<fanart>fanart.jpg</fanart>
 			</assets>
 			<platform>all</platform>
-			<summary lang="he_IL">צפייה בערוצי טלוויזיה ישראליים</summary>
-			<summary lang="en_gb">Watching Israeli TV channels</summary>
-			<description lang="he_IL">צפייה בערוצי טלוויזיה וספורט ישראליים, ההרחבה מתווכת לאתרי סטרימינג, ייתכנו תקלות מעת לעת. לאחר שינוי שפת ממשק יש ללחוץ על "הגדרה ראשונית או תיקון שגיאות".</description>
-			<description lang="en_gb">Watching Israeli sports channels, the extension links to streaming sites, and occasional issues may occur. After changing the interface language, click "Initial Setup or Fix Errors".</description>
-			<disclaimer lang="he_IL">ההרחבה משמשת כמתווכת בלבד והיא איננה יציבה! המפתחים אינם אחראים על כשלון בניגון, זמנים שגויים במדריך השידורים, שעות מבוזבזות או כל אחריות ותופעה לא רצויה אחרת.</disclaimer>
-			<disclaimer lang="en_gb">The extension is used as an intermediary only and is not stable! The developers are not responsible for playback failure, incorrect times in the broadcast guide, wasted hours or any other unwanted warranty and phenomenon.</disclaimer>
 			<supportedcontent>
 				<content>tvshows</content>
 			</supportedcontent>
@@ -61,18 +61,20 @@
 		<extension library="resources/" point="xbmc.python.module"/>
 		<extension library="resources/lib/" point="xbmc.python.module"/>
 		<extension point="xbmc.addon.metadata">
-			<reuselanguageinvoker>true</reuselanguageinvoker>
-			<assets>
-				<icon>icon.png</icon>
-				<fanart>fanart.jpg</fanart>
-			</assets>
-			<platform>all</platform>
 			<summary lang="he_IL">צפיה בערוצי עידן פלוס ובתכניות מהאתרים הרשמיים.</summary>
 			<summary lang="en_gb">Watching Idan Plus channels and shows from offical websites.</summary>
 			<description lang="he_IL">צפיה בערוצי עידן פלוס ובתכניות מהאתרים הרשמיים.[CR]אפשרויות שונות בהגדרות ההרחבה ובקליק ימני על פריט ברשימה.</description>
 			<description lang="en_gb">Watching Idan Plus channels and programs from the official websites.[CR]Various options in the extension settings and right-clicking on an item in the list.</description>
 			<disclaimer lang="he_IL">גירסה זו עברה שינוי יחיד שהיא מקבלת את המידע דרך גיטאהב ולא דרך אתרים חיצוניים.</disclaimer>
 			<disclaimer lang="en_gb">The version underwent a single change, which is that it now receives the information through GitHub rather than external websites.</disclaimer>
+			<summary lang="en">צפיה בערוצי עידן פלוס ובתכניות מהאתרים הרשמיים.</summary>
+			<description lang="en">צפיה בערוצי עידן פלוס ובתכניות מהאתרים הרשמיים.[CR]אפשרויות שונות בהגדרות ההרחבה ובקליק ימני על פריט ברשימה.</description>
+			<reuselanguageinvoker>true</reuselanguageinvoker>
+			<assets>
+				<icon>icon.png</icon>
+				<fanart>fanart.jpg</fanart>
+			</assets>
+			<platform>all</platform>
 			<supportedcontent>
 				<content>tvshows</content>
 			</supportedcontent>
