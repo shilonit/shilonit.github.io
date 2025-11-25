@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Find and Remove Old Files
       run: |
@@ -58,7 +58,7 @@ jobs:
         git status --porcelain || { echo "Error checking git status"; exit 1; }
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.x'
 
