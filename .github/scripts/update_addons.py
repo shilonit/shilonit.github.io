@@ -1,9 +1,9 @@
 import os
-import re
 import hashlib
 import zipfile
 from lxml import etree
 from difflib import unified_diff
+from copy import deepcopy
 
 # Paths
 ADDONS_XML = 'addons.xml'
@@ -54,7 +54,7 @@ def merge_metadata(existing_ext, new_ext):
                 existing_ext.append(new_el)
 
     for new_el in new_ext:
-        if new_el.tag not in special_tags:
+        if new_el.tag not in special_tags and new_el.tag != 'import':
             existing_el = existing_ext.find(new_el.tag)
             if existing_el is not None:
                 existing_ext.remove(existing_el)
@@ -99,15 +99,39 @@ def update_addons_xml_from_addon(addon_xml_data):
         if addon.get('id') == plugin_id:
             print(f"\n📦 Updating {plugin_id} in {ADDONS_XML}")
             addon.attrib.update(addon_tree.attrib)
+
+            # Replace requires completely
+            existing_requires = addon.find('requires')
+            new_requires = addon_tree.find('requires')
+            if existing_requires is not None:
+                addon.remove(existing_requires)
+            if new_requires is not None:
+                addon.insert(0, deepcopy(new_requires))
+
+            # Merge metadata
             existing_metadata = addon.find("extension[@point='xbmc.addon.metadata']")
             new_metadata = addon_tree.find("extension[@point='xbmc.addon.metadata']")
             if existing_metadata is not None and new_metadata is not None:
                 merge_metadata(existing_metadata, new_metadata)
+            elif new_metadata is not None and existing_metadata is None:
+                addon.append(deepcopy(new_metadata))
+
+            # Replace all other extensions completely
+            for old_ext in addon.findall('extension'):
+                if old_ext.get('point') != 'xbmc.addon.metadata':
+                    addon.remove(old_ext)
+            for new_ext in addon_tree.findall('extension'):
+                if new_ext.get('point') != 'xbmc.addon.metadata':
+                    addon.append(deepcopy(new_ext))
+
             tree.write(ADDONS_XML, pretty_print=True, xml_declaration=True, encoding='UTF-8')
             print(f"✅ Updated {plugin_id} to version {version}")
             return
 
-    print(f"⚠️ {plugin_id} not found in {ADDONS_XML}")
+    print(f"⚠️ {plugin_id} not found in {ADDONS_XML}, adding new addon...")
+    root.append(addon_tree)
+    tree.write(ADDONS_XML, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+    print(f"✅ Added {plugin_id} version {version}")
 
 # Main logic
 def main():
