@@ -1,28 +1,34 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <addons>
 	<addon id="repository.shilonit" name="shilonit repo" version="1.0" provider-name="shilonit">
-		<extension point="xbmc.addon.metadata">
-			<summary>shilonit Repo</summary>
-			<description>shilonit Repo</description>
-			<assets>
-			<icon>icon.jpg</icon>
-			<fanart>fanart.jpg</fanart>
-		</assets>
-		<platform>all</platform>
-	</extension>
-	<extension point="xbmc.addon.repository" name="shilonit repo">
+		<extension point="xbmc.addon.repository" name="shilonit repo">
 		<dir>
 			<info compressed="false">https://raw.githubusercontent.com/shilonit/shilonit.github.io/master/addons.xml</info>
 			<checksum>https://raw.githubusercontent.com/shilonit/shilonit.github.io/master/addons.xml.md5</checksum>
 			<datadir zip="true">https://raw.githubusercontent.com/shilonit/shilonit.github.io/master/zips</datadir>
 		</dir>
 	</extension>
-	</addon>
+	<extension point="xbmc.addon.metadata">
+		<summary>shilonit Repo</summary>
+		<description>shilonit Repo</description>
+		<assets>
+			<icon>icon.jpg</icon>
+			<fanart>fanart.jpg</fanart>
+		</assets>
+		<platform>all</platform>
+	</extension>
+</addon>
 	<addon id="plugin.video.tvisrael" name="טלוויזיה ישראל" version="3.0.3" provider-name="shilonit">
 		<requires>
 			<import addon="script.module.requests"/>
 			<import addon="script.module.beautifulsoup4"/>
 		</requires>
+		<extension point="xbmc.python.pluginsource" library="resources/lib/main.py">
+			<provides>video</provides>
+		</extension>
+		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
+		<extension point="xbmc.python.module" library="resources/"/>
+		<extension point="xbmc.python.module" library="resources/lib/"/>
 		<extension point="xbmc.addon.metadata">
 			<summary lang="he_IL">צפייה בערוצי ספורט ישראליים</summary>
 			<summary lang="en_gb">Watching Israeli sport channels</summary>
@@ -40,19 +46,19 @@
 				<content>tvshows</content>
 			</supportedcontent>
 		</extension>
-	<extension point="xbmc.python.pluginsource" library="resources/lib/main.py">
-			<provides>video</provides>
-		</extension>
-		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
-		<extension point="xbmc.python.module" library="resources/"/>
-		<extension point="xbmc.python.module" library="resources/lib/"/>
-		</addon>
+	</addon>
 
 	<addon id="plugin.video.idanplus" name="עידן+ פלוס" version="3.8.9" provider-name="Fishenzon">
 		<requires>
 			<import addon="script.module.requests"/>
 			<import addon="script.module.xmltodict"/>
 		</requires>
+		<extension point="xbmc.python.pluginsource" library="default.py">
+			<provides>video</provides>
+		</extension>
+		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
+		<extension library="resources/" point="xbmc.python.module"/>
+		<extension library="resources/lib/" point="xbmc.python.module"/>
 		<extension point="xbmc.addon.metadata">
 			<summary lang="he_IL">צפיה בערוצי עידן פלוס ובתכניות מהאתרים הרשמיים.</summary>
 			<summary lang="en_gb">Watching Idan Plus channels and shows from offical websites.</summary>
@@ -72,11 +78,5 @@
 				<content>tvshows</content>
 			</supportedcontent>
 		</extension>
-	<extension point="xbmc.python.pluginsource" library="default.py">
-			<provides>video</provides>
-		</extension>
-		<extension point="xbmc.service" library="resources/lib/service.py" start="[login|startup]"/>
-		<extension library="resources/" point="xbmc.python.module"/>
-		<extension library="resources/lib/" point="xbmc.python.module"/>
-		</addon>
+	</addon>
 </addons>
