@@ -2,7 +2,6 @@ import os
 import hashlib
 import zipfile
 from lxml import etree
-from difflib import unified_diff
 from copy import deepcopy
 
 # Paths
@@ -10,7 +9,7 @@ ADDONS_XML = 'addons.xml'
 ADDONS_MD5 = 'addons.xml.md5'
 ZIPS_DIR = 'zips/'
 
-# Compute MD5 checksum
+# Compute MD5 checksum for a file
 def compute_md5(file_path):
     hash_md5 = hashlib.md5()
     with open(file_path, 'rb') as f:
@@ -18,7 +17,7 @@ def compute_md5(file_path):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-# Extract addon.xml from zip
+# Extract addon.xml from a zip file
 def extract_addon_xml(zip_path):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         for name in zip_ref.namelist():
@@ -26,18 +25,6 @@ def extract_addon_xml(zip_path):
                 with zip_ref.open(name) as addon_file:
                     return addon_file.read()
     return None
-
-# Compare two XML strings and print differences
-def compare_xml(old_xml, new_xml, plugin_id):
-    old_lines = old_xml.decode('utf-8').splitlines()
-    new_lines = new_xml.decode('utf-8').splitlines()
-    diff = list(unified_diff(old_lines, new_lines, fromfile='old', tofile='new', lineterm=''))
-    if diff:
-        print(f"\n🔄 Differences for {plugin_id}:")
-        for line in diff:
-            print(line)
-    else:
-        print(f"\n✅ No differences for {plugin_id}")
 
 # Merge metadata without overwriting en_GB with en
 def merge_metadata(existing_ext, new_ext):
@@ -60,7 +47,7 @@ def merge_metadata(existing_ext, new_ext):
                 existing_ext.remove(existing_el)
             existing_ext.append(new_el)
 
-# Update local addon.xml
+# Update local addon.xml file
 def update_local_addon_xml(existing_path, addon_xml_data):
     new_tree = etree.fromstring(addon_xml_data)
 
@@ -83,6 +70,42 @@ def update_local_addon_xml(existing_path, addon_xml_data):
             f.write(addon_xml_data)
         print(f"📄 Saved new addon.xml at {existing_path}")
 
+# Synchronize requires section (imports)
+def sync_requires(addon, addon_tree):
+    new_imports = [(imp.get('addon')) for imp in addon_tree.findall('requires/import')]
+    existing_imports = [(imp.get('addon')) for imp in addon.findall('requires/import')]
+
+    # Remove imports that no longer exist
+    for imp in addon.findall('requires/import'):
+        if imp.get('addon') not in new_imports:
+            addon.find('requires').remove(imp)
+
+    # Add new imports
+    if addon_tree.find('requires') is not None:
+        if addon.find('requires') is None:
+            addon.insert(0, deepcopy(addon_tree.find('requires')))
+        else:
+            for new_imp in addon_tree.findall('requires/import'):
+                if new_imp.get('addon') not in existing_imports:
+                    addon.find('requires').append(deepcopy(new_imp))
+
+# Synchronize extensions (except metadata)
+def sync_extensions(addon, addon_tree):
+    new_exts = [(ext.get('point'), ext.get('library')) for ext in addon_tree.findall('extension')]
+    existing_exts = [(ext.get('point'), ext.get('library')) for ext in addon.findall('extension')]
+
+    # Remove old extensions that no longer exist
+    for old_ext in addon.findall('extension'):
+        key = (old_ext.get('point'), old_ext.get('library'))
+        if key not in new_exts and old_ext.get('point') != 'xbmc.addon.metadata':
+            addon.remove(old_ext)
+
+    # Add new extensions
+    for new_ext in addon_tree.findall('extension'):
+        key = (new_ext.get('point'), new_ext.get('library'))
+        if key not in existing_exts and new_ext.get('point') != 'xbmc.addon.metadata':
+            addon.append(deepcopy(new_ext))
+
 # Update addons.xml with new addon.xml content
 def update_addons_xml_from_addon(addon_xml_data):
     addon_tree = etree.fromstring(addon_xml_data)
@@ -100,13 +123,8 @@ def update_addons_xml_from_addon(addon_xml_data):
             print(f"\n📦 Updating {plugin_id} in {ADDONS_XML}")
             addon.attrib.update(addon_tree.attrib)
 
-            # Replace requires completely
-            existing_requires = addon.find('requires')
-            new_requires = addon_tree.find('requires')
-            if existing_requires is not None:
-                addon.remove(existing_requires)
-            if new_requires is not None:
-                addon.insert(0, deepcopy(new_requires))
+            # Synchronize requires
+            sync_requires(addon, addon_tree)
 
             # Merge metadata
             existing_metadata = addon.find("extension[@point='xbmc.addon.metadata']")
@@ -116,13 +134,8 @@ def update_addons_xml_from_addon(addon_xml_data):
             elif new_metadata is not None and existing_metadata is None:
                 addon.append(deepcopy(new_metadata))
 
-            # Replace all other extensions completely
-            for old_ext in addon.findall('extension'):
-                if old_ext.get('point') != 'xbmc.addon.metadata':
-                    addon.remove(old_ext)
-            for new_ext in addon_tree.findall('extension'):
-                if new_ext.get('point') != 'xbmc.addon.metadata':
-                    addon.append(deepcopy(new_ext))
+            # Synchronize extensions
+            sync_extensions(addon, addon_tree)
 
             tree.write(ADDONS_XML, pretty_print=True, xml_declaration=True, encoding='UTF-8')
             print(f"✅ Updated {plugin_id} to version {version}")
@@ -151,20 +164,14 @@ def main():
                     print(f"❌ Failed to parse addon.xml in {file_name}: {e}")
                     continue
 
-                # Compare with existing addon.xml (if exists)
+                # Update local addon.xml
                 existing_path = os.path.join(root_dir, 'addon.xml')
-                if os.path.exists(existing_path):
-                    with open(existing_path, 'rb') as f:
-                        old_data = f.read()
-                    compare_xml(old_data, addon_xml_data, plugin_id)
-                else:
-                    print(f"📁 No existing addon.xml found for {plugin_id}")
                 update_local_addon_xml(existing_path, addon_xml_data)
 
                 # Update main addons.xml
                 update_addons_xml_from_addon(addon_xml_data)
 
-    # Update MD5
+    # Update MD5 checksum
     md5 = compute_md5(ADDONS_XML)
     with open(ADDONS_MD5, 'w') as f:
         f.write(md5)
