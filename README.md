@@ -11,7 +11,7 @@
 7. בהנאה.
 
 ## 🛠️ הגדרת ההרחבה
-להגדרת ההרחבה יש להכנס אל האתר [https://antifriz.tv/home](https://antifriz.tv/home)
+להגדרת ההרחבה יש להכנס אל האתר [https://antifriz.tv/home](https://antifriz.tv/?ref=zO6h4p4)
 
 שם ניתן למצוא את קוד הגישה
 <img src=".github/images/access_key.png" align="center">
