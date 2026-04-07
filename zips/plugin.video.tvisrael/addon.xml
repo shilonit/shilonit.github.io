@@ -13,7 +13,7 @@
 		<extension point="xbmc.addon.metadata">
 			<summary lang="he_IL">צפייה בערוצי טלוויזיה ישראליים</summary>
 			<summary lang="en_gb">Watching Israeli TV channels</summary>
-			<description lang="he_IL">צפייה בערוצי טלוויזיה ישראליים, ההרחבה מתווכת לאתר סטרימינג ואינה נוטלת כל אחריות, ייתכנו תקלות מעת לעת. לאחר שינוי שפת ממשק יש לבצע "הגדרה ראשונית" בכדי שיווצרו בשפה החדשה שנבחרה.</description>
+			<description lang="he_IL">צפייה בערוצי טלוויזיה ישראליים, ההרחבה מתווכת לאתר סטרימינג ואינה נוטלת כל אחריות, ייתכנו תקלות מעת לעת. לאחר שינוי שפת ממשק יש לבצע "הגדרה ראשונית/תיקון שגיאות" בכדי שיווצרו בשפה החדשה שנבחרה.</description>
 			<description lang="en_gb">When watching Israeli TV channels, the plugin acts as an intermediary for other websites only and does not assume any responsibility. After changing the interface language, an "initial setting" is required so that files are created in the new selected language.</description>
 			<disclaimer lang="he_IL">ההרחבה משמשת כמתווכת בלבד והיא איננה יציבה! המפתחים אינם אחראים על כשלון בניגון, זמנים שגויים במדריך השידורים, שעות מבוזבזות או כל אחריות ותופעה לא רצויה אחרת.</disclaimer>
 			<disclaimer lang="en_gb">The extension is used as an intermediary only and is not stable! The developers are not responsible for playback failure, incorrect times in the broadcast guide, wasted hours or any other unwanted warranty and phenomenon.</disclaimer>
